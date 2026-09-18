@@ -394,7 +394,7 @@ function openQuestionnaire(lecturerId) {
   });
 
   if (els.commentHelp) {
-    const target = activeLecturer.area || activeLecturer.role || activeLecturer.name;
+    const target = activeLecturer.name || activeLecturer.role || activeLecturer.group;
     els.commentHelp.textContent = `Berikan kritik dan saran secara umum kepada ${target}.`;
   }
 
