@@ -1067,3 +1067,34 @@ footer {
   position: relative;
   z-index: 2;
 }
+
+
+/* =========================================
+   V12 - NAVIGATION BUTTON HARD FIX
+   ========================================= */
+
+#backToCategoriesBtn,
+#backToLecturersBtn,
+#cancelQuestionnaireBtn {
+  position: relative !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+  isolation: isolate;
+}
+
+#backToCategoriesBtn::before,
+#backToCategoriesBtn::after,
+#backToLecturersBtn::before,
+#backToLecturersBtn::after,
+#cancelQuestionnaireBtn::before,
+#cancelQuestionnaireBtn::after {
+  pointer-events: none !important;
+}
+
+.lecturer-heading,
+#questionnaireView {
+  position: relative;
+  isolation: isolate;
+}
