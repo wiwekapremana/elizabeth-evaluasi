@@ -350,17 +350,15 @@ function renderInstructorList(role) {
         alert("Anda sudah mengisi evaluasi untuk instruktur ini. Silakan pilih instruktur lain.");
       });
     } else {
-      card.addEventListener("click", () => openQuestionnaire(lecturer.id));
+      card.addEventListener("click", () => openQuestionnaire(lecturer));
     }
 
     els.lecturerGrid.appendChild(card);
   });
 }
 
-function openQuestionnaire(lecturerId) {
-  const student = getStudent();
-  const instructors = getLecturersForMajor(student.major);
-  activeLecturer = instructors.find(l => l.id === lecturerId);
+function openQuestionnaire(lecturer) {
+  activeLecturer = lecturer;
   if (!activeLecturer) return;
 
   els.lecturerSummary.innerHTML = `
