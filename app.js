@@ -1,4 +1,4 @@
-console.info("Elizabeth Evaluasi V12.1 - Back Button Fix");
+console.info("Elizabeth Evaluasi V13.1 - Submit Fix");
 const $ = (id) => document.getElementById(id);
 
 const els = {
@@ -393,10 +393,10 @@ function openQuestionnaire(lecturerId) {
     els.questionsContainer.appendChild(wrapper);
   });
 
-if (els.commentHelp) {
-  els.commentHelp.textContent =
-    `Berikan kritik dan saran secara umum kepada ${activeLecturer.name}.`;
-}
+  if (els.commentHelp) {
+    const target = activeLecturer.name || "instruktur ini";
+    els.commentHelp.textContent = `Berikan kritik dan saran secara umum kepada ${target}.`;
+  }
 
   els.comment.value = "";
   showView("questionnaireView");
@@ -620,6 +620,25 @@ function markLecturerCompleted(id) {
   setCompleted([...completed]);
 }
 
+function openEvaluationConfirmation(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  pendingPayload = collectQuestionnairePayload();
+
+  if (!pendingPayload) {
+    return false;
+  }
+
+  els.confirmModal.classList.remove("hidden");
+  return false;
+}
+
+/* Digunakan langsung dari tombol HTML agar submit native tidak pernah terjadi. */
+window.openEvaluationConfirmation = openEvaluationConfirmation;
+
 function resetSession() {
   localStorage.removeItem(SESSION_KEY);
   localStorage.removeItem(COMPLETED_KEY);
@@ -760,9 +779,7 @@ els.backToCategoriesBtn.addEventListener("click", goBackToCategories);
 
 els.questionnaireForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  pendingPayload = collectQuestionnairePayload();
-  if (!pendingPayload) return;
-  els.confirmModal.classList.remove("hidden");
+  return openEvaluationConfirmation(event);
 });
 
 $("confirmCancelBtn").addEventListener("click", () => {
@@ -788,8 +805,8 @@ $("confirmSendBtn").addEventListener("click", async () => {
 
     renderLecturers(
       result.demo
-        ? `Mode demo: evaluasi untuk ${lecturerName} berhasil diproses. Hubungkan Google Sheets agar progres tersimpan lintas perangkat.`
-        : `Evaluasi untuk ${lecturerName} berhasil disimpan. Progres Anda dapat dilanjutkan kembali menggunakan NIM.`,
+        ? `Mode demo: evaluasi untuk ${lecturerName} berhasil diproses.`
+        : `✅ Evaluasi untuk ${lecturerName} berhasil dikirim dan disimpan ke Google Sheets.`,
       true
     );
     showView("lecturerView");
