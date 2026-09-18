@@ -393,10 +393,10 @@ function openQuestionnaire(lecturerId) {
     els.questionsContainer.appendChild(wrapper);
   });
 
-  if (els.commentHelp) {
-    const target = activeLecturer.name || activeLecturer.role || activeLecturer.group;
-    els.commentHelp.textContent = `Berikan kritik dan saran secara umum kepada ${target}.`;
-  }
+if (els.commentHelp) {
+  els.commentHelp.textContent =
+    `Berikan kritik dan saran secara umum kepada ${activeLecturer.name}.`;
+}
 
   els.comment.value = "";
   showView("questionnaireView");
