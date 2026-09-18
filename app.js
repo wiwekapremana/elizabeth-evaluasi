@@ -1,3 +1,4 @@
+console.info("Elizabeth Evaluasi V12.1 - Back Button Fix");
 const $ = (id) => document.getElementById(id);
 
 const els = {
@@ -37,6 +38,51 @@ let pendingPayload = null;
 
 let instructorCache = [];
 let instructorsLoaded = false;
+
+
+/* =========================================
+   V12 - HARD NAVIGATION HANDLERS
+   Handler global dipakai langsung oleh tombol HTML.
+   ========================================= */
+
+function goBackToCategories(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  activeLecturer = null;
+  activeCategory = null;
+
+  renderCategoryCards();
+  showView("lecturerView");
+
+  return false;
+}
+
+function goBackToLecturers(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  activeLecturer = null;
+
+  if (activeCategory) {
+    renderInstructorList(activeCategory);
+  } else {
+    renderCategoryCards();
+  }
+
+  showView("lecturerView");
+
+  return false;
+}
+
+/* Pastikan inline onclick dapat menemukan fungsi ini. */
+window.goBackToCategories = goBackToCategories;
+window.goBackToLecturers = goBackToLecturers;
+
 
 function getStudent() {
   try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
@@ -706,20 +752,11 @@ $("newSessionCancelBtn").addEventListener("click", () => {
 
 $("newSessionConfirmBtn").addEventListener("click", resetSession);
 
-$("backToLecturersBtn").addEventListener("click", () => {
-  renderLecturers("", true);
-  showView("lecturerView");
-});
+$("backToLecturersBtn").addEventListener("click", goBackToLecturers);
 
-$("cancelQuestionnaireBtn").addEventListener("click", () => {
-  renderLecturers("", true);
-  showView("lecturerView");
-});
+$("cancelQuestionnaireBtn").addEventListener("click", goBackToLecturers);
 
-els.backToCategoriesBtn.addEventListener("click", () => {
-  activeCategory = null;
-  renderCategoryCards();
-});
+els.backToCategoriesBtn.addEventListener("click", goBackToCategories);
 
 els.questionnaireForm.addEventListener("submit", (event) => {
   event.preventDefault();
