@@ -339,6 +339,7 @@ function renderInstructorList(role) {
 
     if (alreadyDone) {
   card.classList.add("completed");
+}
     card.innerHTML = `
       <img class="lecturer-photo" src="${lecturer.photo}" alt="Foto ${escapeHtml(lecturer.name)}" onerror="handleImageError(this)" />
       <div class="lecturer-info">
