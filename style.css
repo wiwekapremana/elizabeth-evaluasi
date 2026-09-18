@@ -1098,3 +1098,52 @@ footer {
   position: relative;
   isolation: isolate;
 }
+/* =========================================
+   CARD SUDAH DIEVALUASI
+   ========================================= */
+
+.lecturer-card.completed {
+  background: #e7f8ef !important;
+  border: 2px solid #32a66a !important;
+  box-shadow: 0 8px 24px rgba(13, 138, 90, .15);
+}
+
+/* bagian foto */
+.lecturer-card.completed .lecturer-photo {
+  background: #d9f3e5 !important;
+}
+
+/* bagian informasi */
+.lecturer-card.completed .lecturer-info {
+  background: #e7f8ef !important;
+}
+
+/* nama instruktur */
+.lecturer-card.completed .lecturer-info strong {
+  color: #087647 !important;
+}
+
+/* area instruktur */
+.lecturer-card.completed
+.lecturer-info > span:not(.role-badge):not(.done-badge) {
+  color: #39755a !important;
+}
+
+/* badge role */
+.lecturer-card.completed .role-badge {
+  background: #c9efd9 !important;
+  color: #087647 !important;
+}
+
+/* badge SUDAH DIISI */
+.lecturer-card.completed .done-badge {
+  background: #0d8a5a !important;
+  color: white !important;
+  text-align: center;
+}
+
+/* tidak terlalu bergerak saat hover */
+.lecturer-card.completed:hover {
+  border-color: #0d8a5a !important;
+  box-shadow: 0 12px 28px rgba(13, 138, 90, .22);
+}
