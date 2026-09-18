@@ -5,7 +5,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwT4-QXYmbGEt
 // DAFTAR JURUSAN
 // =========================================
 const MAJORS = [
-  "Food & Baverage Service",
+  "Food & Beverage Service",
   "Bar & Mixology",
   "Culinary",
   "Pastry & Bakery",
