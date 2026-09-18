@@ -1,4 +1,4 @@
-console.info("Elizabeth Evaluasi V13.1 - Submit Fix");
+console.info("Elizabeth Evaluasi V14 - Multi-role + Submit Button Fix");
 const $ = (id) => document.getElementById(id);
 
 const els = {
@@ -21,6 +21,7 @@ const els = {
   lecturerPageSubtitle: $("lecturerPageSubtitle"),
   backToCategoriesBtn: $("backToCategoriesBtn"),
   questionnaireForm: $("questionnaireForm"),
+  submitQuestionnaireBtn: $("submitQuestionnaireBtn"),
   questionsContainer: $("questionsContainer"),
   comment: $("comment"),
   commentHelp: $("commentHelp"),
@@ -359,6 +360,7 @@ function renderInstructorList(role) {
 
 function openQuestionnaire(lecturer) {
   activeLecturer = lecturer;
+
   if (!activeLecturer) return;
 
   els.lecturerSummary.innerHTML = `
@@ -624,9 +626,19 @@ function openEvaluationConfirmation(event) {
     event.stopPropagation();
   }
 
+  if (!activeLecturer) {
+    alert("Data instruktur tidak ditemukan. Silakan kembali dan pilih instruktur lagi.");
+    return false;
+  }
+
   pendingPayload = collectQuestionnairePayload();
 
   if (!pendingPayload) {
+    return false;
+  }
+
+  if (!els.confirmModal) {
+    alert("Modal konfirmasi tidak ditemukan. Silakan refresh halaman.");
     return false;
   }
 
@@ -775,10 +787,53 @@ $("cancelQuestionnaireBtn").addEventListener("click", goBackToLecturers);
 
 els.backToCategoriesBtn.addEventListener("click", goBackToCategories);
 
-els.questionnaireForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  return openEvaluationConfirmation(event);
-});
+function installQuestionnaireSubmitHandlers() {
+  const form = els.questionnaireForm;
+  const button = els.submitQuestionnaireBtn || $("submitQuestionnaireBtn");
+
+  if (form) {
+    // Cegah browser menjalankan submit GET native.
+    form.action = "javascript:void(0)";
+    form.method = "post";
+
+    form.onsubmit = (event) => {
+      if (event) event.preventDefault();
+      return openEvaluationConfirmation(event);
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      return openEvaluationConfirmation(event);
+    }, true);
+  }
+
+  if (button) {
+    // Tombol selalu ditangani JavaScript, bukan submit HTML.
+    button.type = "button";
+    button.disabled = false;
+
+    // Pastikan tombol dapat menerima click/touch.
+    button.style.pointerEvents = "auto";
+    button.style.position = "relative";
+    button.style.zIndex = "10000";
+    button.style.cursor = "pointer";
+    button.style.touchAction = "manipulation";
+
+    button.onclick = (event) => {
+      return openEvaluationConfirmation(event);
+    };
+
+    // Fallback tambahan untuk browser mobile.
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      return openEvaluationConfirmation(event);
+    }, true);
+  }
+}
+
+installQuestionnaireSubmitHandlers();
 
 $("confirmCancelBtn").addEventListener("click", () => {
   pendingPayload = null;
