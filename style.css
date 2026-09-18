@@ -1031,3 +1031,39 @@ footer {
     font-size: 12px;
   }
 }
+
+
+/* =========================================
+   V11 - CLICK / TOUCH FIX
+   ========================================= */
+
+.btn,
+.back-link,
+.category-card,
+.lecturer-card {
+  position: relative;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn,
+.back-link {
+  z-index: 3;
+}
+
+.category-card,
+.lecturer-card {
+  z-index: 1;
+}
+
+.category-card::before,
+.category-card::after {
+  pointer-events: none;
+}
+
+.session-box,
+.lecturer-heading {
+  position: relative;
+  z-index: 2;
+}
