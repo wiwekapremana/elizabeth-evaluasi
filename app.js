@@ -392,23 +392,42 @@ function collectQuestionnairePayload() {
   };
 }
 
-async function postToGoogleSheets(payload) {
+async function postToGoogleSheets(payload, timeoutMs = 18000) {
   if (!GOOGLE_SCRIPT_URL) {
     console.warn("GOOGLE_SCRIPT_URL belum diisi. Data hanya disimulasikan.", payload);
     await new Promise(resolve => setTimeout(resolve, 450));
     return { ok: true, demo: true };
   }
 
-  const response = await fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  if (!data.ok) throw new Error(data.message || "Google Apps Script mengembalikan error.");
-  return data;
+  try {
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+      cache: "no-store"
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      throw new Error(data.message || "Google Apps Script mengembalikan error.");
+    }
+
+    return data;
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Koneksi ke Google Sheets terlalu lama. Silakan coba kembali.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 async function saveStudentProfile(student) {
@@ -511,6 +530,44 @@ async function lookupStudentByNim(nim) {
   }
 }
 
+async function resumeSessionByNim(nim) {
+  const normalizedNim = String(nim || "").trim();
+
+  if (!normalizedNim) {
+    return {
+      ok: true,
+      found: false,
+      message: "NIM belum diisi."
+    };
+  }
+
+  // V11: satu request untuk identitas, progres, dan daftar instruktur.
+  // Jika Apps Script belum di-deploy ke V11, otomatis memakai cara lama.
+  try {
+    const result = await postToGoogleSheets({
+      action: "resumeSession",
+      nim: normalizedNim
+    });
+
+    if (Array.isArray(result.instructors)) {
+      instructorCache = result.instructors;
+      instructorsLoaded = true;
+    }
+
+    return result;
+  } catch (error) {
+    console.warn("resumeSession V11 belum tersedia. Menggunakan fallback lama.", error);
+
+    const result = await lookupStudentByNim(normalizedNim);
+
+    if (!instructorsLoaded) {
+      await ensureInstructorsLoaded();
+    }
+
+    return result;
+  }
+}
+
 function markLecturerCompleted(id) {
   const completed = new Set(getCompleted());
   completed.add(id);
@@ -597,7 +654,7 @@ els.resumeForm.addEventListener("submit", async (event) => {
   els.resumeBtn.textContent = "Mencari...";
 
   try {
-    const result = await lookupStudentByNim(nim);
+    const result = await resumeSessionByNim(nim);
     if (!result.found) {
       alert(
         result.demo
@@ -610,7 +667,9 @@ els.resumeForm.addEventListener("submit", async (event) => {
     setStudent(result.student);
     setCompleted(result.completedLecturerIds || []);
 
-    await ensureInstructorsLoaded(true);
+    if (!instructorsLoaded) {
+      await ensureInstructorsLoaded();
+    }
 
     renderLecturers(`Sesi ${result.student.name} berhasil dipulihkan. Silakan lanjutkan instruktur yang belum diisi.`);
     showView("lecturerView");
