@@ -336,6 +336,9 @@ function renderInstructorList(role) {
     const card = document.createElement("button");
     card.type = "button";
     card.className = "lecturer-card";
+    if (alreadyDone) {
+  card.classList.add("completed");
+}
     card.innerHTML = `
       <img class="lecturer-photo" src="${lecturer.photo}" alt="Foto ${escapeHtml(lecturer.name)}" onerror="handleImageError(this)" />
       <div class="lecturer-info">
