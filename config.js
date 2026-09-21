@@ -4,7 +4,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwT4-QXYmbGEt
 // DAFTAR JURUSAN
 // =========================================
 const MAJORS = [
-  "Food & Baverage Service",
+  "Food & Beverage Service",
   "Bar & Mixology",
   "Culinary",
   "Pastry & Bakery",
@@ -27,7 +27,7 @@ const MAJORS = [
 // GLOBAL dipakai untuk Instruktur IT, Business, dan English
 // yang tampil di semua jurusan.
 const MAJOR_TO_POOL = {
-  "Food & Baverage Service": "fnb_bar",
+  "Food & Beverage Service": "fnb_bar",
   "Bar & Mixology": "fnb_bar",
 
   "Culinary": "culinary_pastry",
