@@ -1,4 +1,4 @@
-console.info("Elizabeth Evaluasi V14.2 - Mobile Submit Fix");
+console.info("Elizabeth Evaluasi V14.3 - Kritik & Saran Wajib");
 const $ = (id) => document.getElementById(id);
 
 const els = {
@@ -336,9 +336,6 @@ function renderInstructorList(role) {
     const card = document.createElement("button");
     card.type = "button";
     card.className = "lecturer-card";
-    if (alreadyDone) {
-  card.classList.add("completed");
-}
     card.innerHTML = `
       <img class="lecturer-photo" src="${lecturer.photo}" alt="Foto ${escapeHtml(lecturer.name)}" onerror="handleImageError(this)" />
       <div class="lecturer-info">
@@ -421,32 +418,32 @@ function collectQuestionnairePayload() {
     };
   });
 
-if (answers.some(a => !a.rating)) {
-  alert("Mohon isi seluruh rating 1–5 sebelum mengirim.");
-  return null;
-}
+  if (answers.some(a => !a.rating)) {
+    alert("Mohon isi seluruh rating 1–5 sebelum mengirim.");
+    return null;
+  }
 
-const comment = els.comment.value.trim();
+  const comment = els.comment.value.trim();
 
-if (!comment) {
-  alert("Mohon isi Kritik dan Saran sebelum mengirim evaluasi.");
-  els.comment.focus();
-  return null;
-}
+  if (!comment) {
+    alert("Mohon isi Kritik dan Saran sebelum mengirim evaluasi.");
+    els.comment.focus();
+    return null;
+  }
 
-return {
-  action: "submitEvaluation",
-  timestamp_client: new Date().toISOString(),
-  student_name: student.name,
-  nim: student.nim,
-  major: student.major,
-  lecturer_id: activeLecturer.id,
-  lecturer_name: activeLecturer.name,
-  lecturer_role: activeLecturer.role,
-  lecturer_area: activeLecturer.area,
-  answers,
-  comment: comment
-};
+  return {
+    action: "submitEvaluation",
+    timestamp_client: new Date().toISOString(),
+    student_name: student.name,
+    nim: student.nim,
+    major: student.major,
+    lecturer_id: activeLecturer.id,
+    lecturer_name: activeLecturer.name,
+    lecturer_role: activeLecturer.role,
+    lecturer_area: activeLecturer.area,
+    answers,
+    comment: comment
+  };
 }
 
 async function postToGoogleSheets(payload, timeoutMs = 18000) {
