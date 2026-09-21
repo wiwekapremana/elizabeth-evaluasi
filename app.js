@@ -421,24 +421,32 @@ function collectQuestionnairePayload() {
     };
   });
 
-  if (answers.some(a => !a.rating)) {
-    alert("Mohon isi seluruh rating 1–5 sebelum mengirim.");
-    return null;
-  }
+if (answers.some(a => !a.rating)) {
+  alert("Mohon isi seluruh rating 1–5 sebelum mengirim.");
+  return null;
+}
 
-  return {
-    action: "submitEvaluation",
-    timestamp_client: new Date().toISOString(),
-    student_name: student.name,
-    nim: student.nim,
-    major: student.major,
-    lecturer_id: activeLecturer.id,
-    lecturer_name: activeLecturer.name,
-    lecturer_role: activeLecturer.role,
-    lecturer_area: activeLecturer.area,
-    answers,
-    comment: els.comment.value.trim()
-  };
+const comment = els.comment.value.trim();
+
+if (!comment) {
+  alert("Mohon isi Kritik dan Saran sebelum mengirim evaluasi.");
+  els.comment.focus();
+  return null;
+}
+
+return {
+  action: "submitEvaluation",
+  timestamp_client: new Date().toISOString(),
+  student_name: student.name,
+  nim: student.nim,
+  major: student.major,
+  lecturer_id: activeLecturer.id,
+  lecturer_name: activeLecturer.name,
+  lecturer_role: activeLecturer.role,
+  lecturer_area: activeLecturer.area,
+  answers,
+  comment: comment
+};
 }
 
 async function postToGoogleSheets(payload, timeoutMs = 18000) {
