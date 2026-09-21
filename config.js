@@ -1,11 +1,4 @@
-// =========================================
-// KONFIGURASI ELIZABETH INTERNATIONAL
-// =========================================
-
-// Tempel URL Web App Google Apps Script di bawah ini.
-// Contoh:
-// const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec";
-const GOOGLE_SCRIPT_URL = "";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwT4-QXYmbGEtvidcViP91sfGSiptSNWQ1iQfISbOLVVm39B4-1l9Kzef6zAnnvVg/exec";
 
 // =========================================
 // DAFTAR JURUSAN
