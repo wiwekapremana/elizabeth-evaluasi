@@ -251,6 +251,21 @@
   color: var(--orange-dark);
 }
 
+.pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.pager span {
+  text-align: center;
+}
+
 .empty-state {
   padding: 24px;
   color: var(--muted);

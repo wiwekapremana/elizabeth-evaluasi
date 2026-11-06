@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=15.0" />
-  <link rel="stylesheet" href="admin.css?v=15.0" />
+  <link rel="stylesheet" href="admin.css?v=15.1" />
 </head>
 <body>
   <header class="topbar">
@@ -81,6 +81,11 @@
       <div id="listTab">
         <div id="coverage" class="coverage"></div>
         <div id="instructorList" class="instructor-list"></div>
+        <nav id="pager" class="pager hidden" aria-label="Halaman daftar instruktur">
+          <button id="prevPage" class="btn ghost" type="button">← Sebelumnya</button>
+          <span id="pageInfo"></span>
+          <button id="nextPage" class="btn ghost" type="button">Berikutnya →</button>
+        </nav>
       </div>
 
       <!-- TAB: MATRIKS -->
@@ -157,6 +162,6 @@
   </div>
 
   <script src="../config.js?v=15.0"></script>
-  <script src="admin.js?v=15.0"></script>
+  <script src="admin.js?v=15.1"></script>
 </body>
 </html>

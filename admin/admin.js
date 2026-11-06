@@ -15,12 +15,14 @@ const MAJOR_SHORT = {
   "Hotel Digital Marketing": "Digital Mkt."
 };
 const PLACEHOLDER = "https://placehold.co/900x675?text=Elizabeth+International";
+const PAGE_SIZE = 10;
 
 const state = {
   pin: "",
   majors: typeof MAJORS !== "undefined" ? MAJORS.slice() : [],
   instructors: [],
   tab: "list",
+  page: 1,
   draft: {},      // id -> majors[] (perubahan matriks yang belum disimpan)
   editing: null   // instruktur yang sedang diedit; null = tambah baru
 };
@@ -290,8 +292,19 @@ function renderCoverage() {
 }
 
 function renderList() {
-  const list = filteredInstructors();
+  const all = filteredInstructors();
   const container = $("instructorList");
+  const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+  state.page = Math.min(Math.max(1, state.page), totalPages);
+
+  const start = (state.page - 1) * PAGE_SIZE;
+  const list = all.slice(start, start + PAGE_SIZE);
+
+  $("pager").classList.toggle("hidden", all.length <= PAGE_SIZE);
+  $("pageInfo").textContent =
+    `${start + 1}–${start + list.length} dari ${all.length} · Halaman ${state.page}/${totalPages}`;
+  $("prevPage").disabled = state.page <= 1;
+  $("nextPage").disabled = state.page >= totalPages;
 
   if (!list.length) {
     container.innerHTML = '<div class="panel empty-state">Tidak ada instruktur yang cocok dengan filter.</div>';
@@ -574,8 +587,20 @@ $("reloadBtn").addEventListener("click", () => {
 $("addBtn").addEventListener("click", () => openEdit(null));
 
 ["searchInput", "filterMajor", "filterRole", "filterStatus"].forEach(id => {
-  $(id).addEventListener(id === "searchInput" ? "input" : "change", render);
+  $(id).addEventListener(id === "searchInput" ? "input" : "change", () => {
+    state.page = 1;
+    render();
+  });
 });
+
+function goToPage(delta) {
+  state.page += delta;
+  renderList();
+  $("listTab").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+$("prevPage").addEventListener("click", () => goToPage(-1));
+$("nextPage").addEventListener("click", () => goToPage(1));
 
 document.querySelectorAll(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
@@ -589,6 +614,7 @@ $("coverage").addEventListener("click", (event) => {
   if (!card) return;
   const select = $("filterMajor");
   select.value = select.value === card.dataset.major ? "" : card.dataset.major;
+  state.page = 1;
   render();
 });
 
