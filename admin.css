@@ -1,0 +1,532 @@
+/* Admin Instruktur - memakai token warna dari style.css */
+
+.admin-login {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.admin-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-head h1 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 36px);
+  color: var(--red-dark);
+}
+
+.admin-sub {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.admin-head-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.notice.error {
+  background: #fdecec;
+  color: #9f1d1d;
+  border: 1px solid #f3c4c4;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 24px 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  border: 0;
+  background: none;
+  padding: 12px 16px;
+  font-weight: 700;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tab.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
+
+/* Toolbar */
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)) auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.toolbar input,
+.toolbar select {
+  margin-top: 0;
+  padding: 11px 12px;
+}
+
+.toolbar .btn {
+  white-space: nowrap;
+}
+
+/* Cakupan per jurusan */
+.coverage {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.coverage-card {
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  color: var(--text);
+  transition: .15s ease;
+}
+
+.coverage-card:hover {
+  border-color: var(--red);
+}
+
+.coverage-title {
+  display: block;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--red-dark);
+  margin-bottom: 8px;
+  min-height: 2.4em;
+}
+
+.coverage-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+.coverage-card li {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: var(--muted);
+}
+
+.coverage-card li strong {
+  color: var(--text);
+}
+
+.coverage-card li.zero,
+.coverage-card li.zero strong {
+  color: var(--danger);
+}
+
+/* Daftar instruktur */
+.instructor-list {
+  display: grid;
+  gap: 10px;
+}
+
+.instructor-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  color: var(--text);
+  transition: .15s ease;
+}
+
+.instructor-row:hover {
+  border-color: var(--red);
+  box-shadow: var(--shadow);
+}
+
+.instructor-row.inactive {
+  opacity: .6;
+}
+
+.instructor-row img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: var(--red-soft);
+}
+
+.row-main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.row-main strong {
+  font-size: 15px;
+}
+
+.row-sub {
+  font-size: 13px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+}
+
+.row-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--red-soft);
+  color: var(--red-dark);
+}
+
+.chip.all {
+  background: #e8f8f0;
+  color: #0f6b49;
+}
+
+.chip.empty {
+  background: #fdecec;
+  color: var(--danger);
+}
+
+.row-meta {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.row-meta .role-badge {
+  margin-top: 0;
+  align-self: auto;
+}
+
+.status {
+  font-weight: 800;
+}
+
+.status.on {
+  color: var(--success);
+}
+
+.status.off {
+  color: var(--muted);
+}
+
+.eval-count {
+  color: var(--muted);
+}
+
+.legacy {
+  font-size: 11px;
+  color: var(--orange-dark);
+}
+
+.empty-state {
+  padding: 24px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Matriks */
+.matrix-wrap {
+  overflow-x: auto;
+  margin-top: 12px;
+  margin-bottom: 90px;
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.matrix th,
+.matrix td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.matrix thead th {
+  font-size: 12px;
+  color: var(--muted);
+  background: #fff8f5;
+  position: sticky;
+  top: 0;
+}
+
+.matrix .sticky-col {
+  position: sticky;
+  left: 0;
+  text-align: left;
+  background: var(--surface);
+  min-width: 200px;
+  z-index: 1;
+}
+
+.matrix thead .sticky-col {
+  background: #fff8f5;
+  z-index: 2;
+}
+
+.m-name {
+  display: block;
+  font-weight: 700;
+  white-space: normal;
+}
+
+.m-role {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.matrix input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--red);
+  cursor: pointer;
+}
+
+.matrix input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.matrix tr.dirty th,
+.matrix tr.dirty td {
+  background: var(--orange-soft);
+}
+
+.matrix tr.inactive {
+  opacity: .6;
+}
+
+.matrix tr.totals th,
+.matrix tr.totals td {
+  font-weight: 800;
+  background: #fff8f5;
+}
+
+.matrix tr.totals td.zero {
+  color: var(--danger);
+}
+
+/* Bar simpan */
+.save-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  width: min(760px, calc(100% - 32px));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 14px 12px 18px;
+  background: var(--text);
+  color: #fff;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+  z-index: 50;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.save-bar > div {
+  display: flex;
+  gap: 8px;
+}
+
+/* Modal edit */
+.edit-modal {
+  width: min(620px, 100%);
+  max-height: calc(100vh - 44px);
+  overflow-y: auto;
+  text-align: left;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.edit-photo img {
+  width: 120px;
+  height: 120px;
+  margin-top: 18px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: var(--red-soft);
+  border: 1px solid var(--border);
+}
+
+.majors-field {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px 14px 14px;
+  margin: 18px 0 0;
+}
+
+.majors-field legend {
+  font-weight: 700;
+  font-size: 14px;
+  padding: 0 6px;
+}
+
+.major-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 14px;
+}
+
+label.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+label.check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--red);
+}
+
+.all-check {
+  font-weight: 700 !important;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.edit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.id-field {
+  width: 160px;
+}
+
+.id-field input[readonly] {
+  background: #faf3f1;
+  color: var(--muted);
+}
+
+.edit-info {
+  font-size: 13px;
+  color: var(--muted);
+  min-height: 1em;
+}
+
+.edit-actions {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.edit-actions .spacer {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .toolbar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .toolbar input[type="search"],
+  .toolbar .btn {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-row {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .instructor-row img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .row-meta {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-items: start;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-photo img {
+    width: 96px;
+    height: 96px;
+  }
+
+  .major-checks {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .id-field {
+    width: 100%;
+  }
+
+  .matrix .sticky-col {
+    min-width: 140px;
+  }
+}
