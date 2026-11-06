@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="favicon.ico">
+  <title>Admin Instruktur - Elizabeth International</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=15.0" />
+  <link rel="stylesheet" href="admin.css?v=15.0" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo-elizabeth.png" alt="Logo Elizabeth International" class="brand-logo">
+      <div class="brand-copy">
+        <strong>Admin Instruktur</strong>
+        <span>Sistem Evaluasi Instruktur</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <!-- LOGIN -->
+    <section id="loginView" class="view">
+      <form id="loginForm" class="panel form-panel admin-login">
+        <div class="entry-icon">🔒</div>
+        <h2>Masuk Admin</h2>
+        <p class="form-copy">Masukkan PIN admin untuk mengelola data instruktur.</p>
+        <label>
+          PIN Admin
+          <input id="pinInput" type="password" inputmode="numeric" autocomplete="current-password" required />
+        </label>
+        <button id="loginBtn" class="btn primary" type="submit">Masuk</button>
+        <p id="demoHint" class="resume-help hidden">Mode demo: data contoh, tidak terhubung ke Google Sheets. PIN apa saja diterima.</p>
+      </form>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="adminView" class="view hidden">
+      <div class="admin-head">
+        <div>
+          <h1>Manajemen Instruktur</h1>
+          <p id="adminSummary" class="admin-sub"></p>
+        </div>
+        <div class="admin-head-actions">
+          <button id="reloadBtn" class="btn ghost" type="button">Muat Ulang</button>
+          <button id="logoutBtn" class="btn danger-ghost" type="button">Keluar</button>
+        </div>
+      </div>
+
+      <div id="adminNotice" class="notice hidden" role="status"></div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab active" type="button" role="tab" data-tab="list">Daftar Instruktur</button>
+        <button class="tab" type="button" role="tab" data-tab="matrix">Penempatan Jurusan</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="Cari nama, bidang, atau ID..." />
+        <select id="filterMajor"><option value="">Semua jurusan</option></select>
+        <select id="filterRole"><option value="">Semua kategori</option></select>
+        <select id="filterStatus">
+          <option value="">Semua status</option>
+          <option value="Aktif">Aktif</option>
+          <option value="Nonaktif">Nonaktif</option>
+        </select>
+        <button id="addBtn" class="btn primary" type="button">+ Tambah Instruktur</button>
+      </div>
+
+      <!-- TAB: DAFTAR -->
+      <div id="listTab">
+        <div id="coverage" class="coverage"></div>
+        <div id="instructorList" class="instructor-list"></div>
+      </div>
+
+      <!-- TAB: MATRIKS -->
+      <div id="matrixTab" class="hidden">
+        <p class="admin-sub">Centang jurusan tempat instruktur tampil untuk dievaluasi. Perubahan baru tersimpan setelah klik <strong>Simpan Perubahan</strong>.</p>
+        <div class="matrix-wrap panel">
+          <table class="matrix">
+            <thead id="matrixHead"></thead>
+            <tbody id="matrixBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="saveBar" class="save-bar hidden">
+    <span id="saveBarText"></span>
+    <div>
+      <button id="discardBtn" class="btn ghost" type="button">Batalkan</button>
+      <button id="saveMatrixBtn" class="btn primary" type="button">Simpan Perubahan</button>
+    </div>
+  </div>
+
+  <!-- MODAL EDIT -->
+  <div id="editModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <form id="editForm" class="modal edit-modal">
+      <h3 id="editTitle">Tambah Instruktur</h3>
+
+      <div class="edit-grid">
+        <div class="edit-photo">
+          <img id="photoPreview" alt="Pratinjau foto" />
+        </div>
+        <div>
+          <label>Nama Instruktur
+            <input id="fName" type="text" required />
+          </label>
+          <label>Kategori
+            <input id="fRole" type="text" list="roleOptions" required placeholder="Mis. Instruktur IT" />
+            <datalist id="roleOptions"></datalist>
+          </label>
+        </div>
+      </div>
+
+      <label>Bidang / Mata Kuliah
+        <input id="fArea" type="text" placeholder="Mis. Basic Cooking, Microsoft Office" />
+      </label>
+
+      <label>Link Foto
+        <input id="fPhoto" type="url" placeholder="Link Google Drive atau URL gambar" />
+      </label>
+
+      <fieldset class="majors-field">
+        <legend>Ditempatkan di jurusan</legend>
+        <label class="check all-check"><input id="fAll" type="checkbox" /> Semua jurusan</label>
+        <div id="majorChecks" class="major-checks"></div>
+      </fieldset>
+
+      <div class="edit-row">
+        <label class="check"><input id="fActive" type="checkbox" checked /> Aktif (tampil untuk mahasiswa)</label>
+        <label class="id-field">ID
+          <input id="fId" type="text" placeholder="Otomatis" />
+        </label>
+      </div>
+
+      <p id="editInfo" class="edit-info"></p>
+
+      <div class="modal-actions edit-actions">
+        <button id="deleteBtn" class="btn danger-ghost" type="button">Hapus</button>
+        <span class="spacer"></span>
+        <button id="editCancelBtn" class="btn ghost" type="button">Batal</button>
+        <button id="editSaveBtn" class="btn primary" type="submit">Simpan</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="config.js?v=15.0"></script>
+  <script src="admin.js?v=15.0"></script>
+</body>
+</html>

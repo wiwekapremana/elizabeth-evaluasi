@@ -36,15 +36,13 @@ Setelah memilih instruktur, mahasiswa akan diarahkan ke halaman kuisioner evalua
 
 Setelah kuisioner dikirim, hasil evaluasi tersimpan secara otomatis ke Google Sheets dan mahasiswa akan kembali ke daftar instruktur untuk melanjutkan evaluasi instruktur lainnya.
 
-## Manajemen Instruktur (/admin)
 
-Sejak V15, data instruktur dikelola lewat halaman `/admin` (mis. `https://alamat-website/admin`), tanpa perlu membuka Google Sheets.
 
 - **Daftar Instruktur:** tambah, edit, nonaktifkan, atau hapus instruktur. Isinya nama, kategori, bidang/mata kuliah, link foto, dan jurusan tempat instruktur tampil.
 - **Penempatan Jurusan:** matriks centang instruktur × jurusan untuk mengatur banyak instruktur sekaligus. Perubahan baru tersimpan setelah klik **Simpan Perubahan**.
 - **Kartu cakupan:** jumlah instruktur aktif per jurusan dan per kategori. Angka 0 ditandai merah.
 - Instruktur yang sudah punya evaluasi tidak bisa dihapus, hanya bisa dinonaktifkan. Dengan begitu data evaluasinya tetap utuh.
-- Coba tanpa Google Sheets: buka `/admin/?demo=1`.
+
 
 ### Struktur sheet "Instruktur"
 
@@ -59,12 +57,3 @@ Sejak V15, data instruktur dikelola lewat halaman `/admin` (mis. `https://alamat
 | Status | `Aktif` / `Nonaktif` |
 | Jurusan | Daftar jurusan dipisah koma, atau `SEMUA` (kolom ini dibuat otomatis) |
 
-### Deploy Apps Script
-
-1. Buka Google Sheets, lalu **Extensions > Apps Script**.
-2. Ganti isi `Code.gs` dengan `apps-script/Code.gs` dari repo ini.
-3. Buka **Project Settings > Script Properties**, lalu tambahkan properti `ADMIN_PIN` berisi PIN admin.
-4. Klik **Deploy > Manage deployments**, edit deployment yang aktif, pilih **New version**, lalu **Deploy**. URL `/exec` tetap sama, jadi `config.js` tidak perlu diubah.
-5. Upload folder `admin/` beserta `app.js`, `config.js`, dan `index.html` ke hosting website.
-
-PIN salah 5 kali akan mengunci login admin selama 15 menit.
