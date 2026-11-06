@@ -14,8 +14,12 @@ const MAJORS = [
 ];
 
 // =========================================
-// RELASI JURUSAN -> GROUP INSTRUKTUR
+// RELASI JURUSAN -> GROUP INSTRUKTUR (LAMA)
 // =========================================
+//
+// Sejak V15 penempatan instruktur diatur per jurusan lewat admin.html
+// (kolom "Jurusan" di sheet Instruktur). Peta di bawah hanya dipakai
+// untuk baris lama yang kolom "Jurusan"-nya masih kosong.
 //
 // Nilai Group yang dipakai di sheet "Instruktur":
 // - fnb_bar

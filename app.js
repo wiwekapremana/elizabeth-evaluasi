@@ -1,4 +1,4 @@
-console.info("Elizabeth Evaluasi V14.3 - Kritik & Saran Wajib");
+console.info("Elizabeth Evaluasi V15.0 - Penempatan per Jurusan");
 const $ = (id) => document.getElementById(id);
 
 const els = {
@@ -130,12 +130,23 @@ function populateMajors() {
   }
 }
 
-function getLecturersForMajor(major) {
-  const poolKey = MAJOR_TO_POOL[major];
-  if (!poolKey) return [];
+function instructorTeachesMajor(item, major) {
+  // V15: kolom "Jurusan" (array majors) dari Apps Script.
+  if (Array.isArray(item.majors) && item.majors.length) {
+    return item.majors.includes("SEMUA") || item.majors.includes(major);
+  }
 
+  // Fallback: Apps Script lama yang hanya mengirim "group".
+  const poolKey = MAJOR_TO_POOL[major];
+  return String(item.group || "")
+    .split(",")
+    .map(g => g.trim())
+    .some(g => g === "GLOBAL" || (poolKey && g === poolKey));
+}
+
+function getLecturersForMajor(major) {
   return instructorCache
-    .filter(item => item.group === poolKey || item.group === "GLOBAL")
+    .filter(item => instructorTeachesMajor(item, major))
     .map(item => ({ ...item, major }));
 }
 
@@ -253,6 +264,11 @@ function renderCategoryCards() {
     "Instruktur Business",
     "Instruktur English"
   ];
+
+  // Kategori baru yang ditambah lewat admin tetap tampil, setelah 4 kategori utama.
+  lecturers.forEach(item => {
+    if (item.role && !roleOrder.includes(item.role)) roleOrder.push(item.role);
+  });
 
   els.lecturerPageTitle.textContent = "Pilih Kategori Instruktur";
   els.lecturerPageSubtitle.textContent =
