@@ -307,6 +307,11 @@ function renderCoverage() {
   }).join("");
 }
 
+function alsoIn(item) {
+  const roles = [...new Set(siblingsOf(item).map(s => roleLabel(s.role)))];
+  return roles.length ? `<span class="also-in">Juga mengajar: ${escapeHtml(roles.join(", "))}</span>` : "";
+}
+
 function renderList() {
   const all = filteredInstructors();
   const container = $("instructorList");
@@ -334,6 +339,7 @@ function renderList() {
         <strong>${escapeHtml(item.name)}</strong>
         <span class="row-sub">${escapeHtml(item.area || "-")} · <span class="mono">${escapeHtml(item.id)}</span></span>
         <span class="row-chips">${majorChips(majorsOf(item))}</span>
+        ${alsoIn(item)}
       </span>
       <span class="row-meta">
         <span class="role-badge">${escapeHtml(item.role)}</span>
@@ -477,22 +483,56 @@ function driveThumb(url) {
   return match ? `https://drive.google.com/thumbnail?id=${encodeURIComponent(match[1])}&sz=w600` : url;
 }
 
-function openEdit(item = null) {
+/* Satu orang bisa punya beberapa entri (satu per kategori), dikenali dari nama yang sama. */
+function personKey(name) {
+  return String(name || "").toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function siblingsOf(item) {
+  if (!item) return [];
+  const key = personKey(item.name);
+  return state.instructors.filter(i => i.id !== item.id && personKey(i.name) === key);
+}
+
+function renderOtherCats(item, siblings) {
+  $("otherCats").classList.toggle("hidden", !item && !siblings.length);
+  $("otherCatsList").innerHTML = siblings.length
+    ? siblings.map(s => `
+        <button type="button" class="other-cat" data-id="${escapeHtml(s.id)}" title="Buka entri ini">
+          <span class="role-badge">${escapeHtml(s.role)}</span>
+          <span>${escapeHtml(s.area || "-")}</span>
+          <span class="other-cat-majors">${majorChips(s.majors || [])}</span>
+        </button>`).join("")
+    : '<p class="other-cats-empty">Belum ada. Instruktur ini hanya tampil di kategori di atas.</p>';
+  $("syncWrap").classList.toggle("hidden", !item || !siblings.length);
+  $("addCategoryBtn").classList.toggle("hidden", !item);
+}
+
+function openEdit(item = null, preset = null) {
   state.editing = item;
+  state.editingSiblings = item ? siblingsOf(item) : (preset ? [preset, ...siblingsOf(preset)] : []);
   const filterMajor = $("filterMajor").value;
   const filterRole = state.role;
 
-  $("editTitle").textContent = item ? "Edit Instruktur" : "Tambah Instruktur";
-  $("fName").value = item?.name || "";
-  $("fRole").value = item?.role || filterRole || "";
+  let presetRole = "";
+  if (preset) {
+    const used = state.editingSiblings.map(s => s.role);
+    presetRole = ROLE_ORDER.find(r => !used.includes(r)) || "";
+  }
+
+  $("editTitle").textContent = item ? "Edit Instruktur" : (preset ? "Tambah ke Kategori Lain" : "Tambah Instruktur");
+  $("fName").value = item?.name || preset?.name || "";
+  $("fRole").value = item?.role || (preset ? presetRole : filterRole) || "";
   $("fArea").value = item?.area || "";
-  $("fPhoto").value = item?.photo || "";
+  $("fPhoto").value = item?.photo || preset?.photo || "";
   $("fActive").checked = item ? item.status === "Aktif" : true;
   $("fId").value = item?.id || "";
   $("fId").readOnly = Boolean(item);
   $("fId").title = item ? "ID tidak bisa diubah karena dipakai di data evaluasi." : "Kosongkan untuk dibuat otomatis.";
-  renderMajorChecks(item ? majorsOf(item) : (filterMajor ? [filterMajor] : []));
+  renderMajorChecks(item ? majorsOf(item) : (filterMajor && !preset ? [filterMajor] : []));
+  if (preset) state.editing = null;
   updatePhotoPreview();
+  renderOtherCats(item, state.editingSiblings);
 
   const deleteBtn = $("deleteBtn");
   deleteBtn.classList.toggle("hidden", !item);
@@ -506,7 +546,7 @@ function openEdit(item = null) {
     : "";
 
   $("editModal").classList.remove("hidden");
-  $("fName").focus();
+  (preset ? $("fRole") : $("fName")).focus();
 }
 
 function closeEdit() {
@@ -541,11 +581,24 @@ async function saveEdit(event) {
     return;
   }
 
+  const siblings = state.editingSiblings || [];
+  const sameRole = siblings.find(s => s.role === data.role);
+  if (sameRole && !confirm(`${data.name} sudah punya entri di kategori ${data.role}. Tetap simpan sebagai entri terpisah?`)) {
+    return;
+  }
+
+  const batch = [data];
+  if (state.editing && siblings.length && $("fSync").checked) {
+    siblings
+      .filter(s => s.name !== data.name || (s.photo || "") !== data.photo)
+      .forEach(s => batch.push({ ...toPayload(s), name: data.name, photo: data.photo }));
+  }
+
   const button = $("editSaveBtn");
   button.disabled = true;
   button.textContent = "Menyimpan...";
   try {
-    const result = await api("adminSave", { instructors: [data] });
+    const result = await api("adminSave", { instructors: batch });
     if (state.editing) delete state.draft[state.editing.id];
     const keepDraft = { ...state.draft };
     closeEdit();
@@ -667,6 +720,15 @@ $("fAll").addEventListener("change", () => {
 $("fPhoto").addEventListener("input", updatePhotoPreview);
 $("editForm").addEventListener("submit", saveEdit);
 $("editCancelBtn").addEventListener("click", closeEdit);
+$("addCategoryBtn").addEventListener("click", () => {
+  const base = state.editing;
+  if (base) openEdit(null, base);
+});
+$("otherCatsList").addEventListener("click", (event) => {
+  const button = event.target.closest(".other-cat");
+  if (!button) return;
+  openEdit(state.instructors.find(i => i.id === button.dataset.id));
+});
 $("deleteBtn").addEventListener("click", deleteEditing);
 $("editModal").addEventListener("click", (event) => {
   if (event.target === $("editModal")) closeEdit();

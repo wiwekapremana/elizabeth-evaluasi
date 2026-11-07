@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css?v=15.0" />
-  <link rel="stylesheet" href="admin.css?v=15.2" />
+  <link rel="stylesheet" href="admin.css?v=15.3" />
 </head>
 <body>
   <header class="topbar">
@@ -151,6 +151,14 @@
         </label>
       </div>
 
+      <div id="otherCats" class="other-cats">
+        <strong class="other-cats-title">Mengajar di kategori lain</strong>
+        <p class="other-cats-help">Instruktur yang mengajar di lebih dari satu kategori (mis. Jurusan dan Business) punya satu entri per kategori, supaya evaluasinya terpisah per mata kuliah.</p>
+        <div id="otherCatsList" class="other-cats-list"></div>
+        <label id="syncWrap" class="check hidden"><input id="fSync" type="checkbox" checked /> Samakan nama &amp; foto di kategori lain saat disimpan</label>
+        <button id="addCategoryBtn" class="btn ghost" type="button">+ Tambah ke kategori lain</button>
+      </div>
+
       <p id="editInfo" class="edit-info"></p>
 
       <div class="modal-actions edit-actions">
@@ -163,6 +171,6 @@
   </div>
 
   <script src="../config.js?v=15.0"></script>
-  <script src="admin.js?v=15.2"></script>
+  <script src="admin.js?v=15.3"></script>
 </body>
 </html>

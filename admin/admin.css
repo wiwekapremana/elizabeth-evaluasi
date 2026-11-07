@@ -515,6 +515,71 @@ label.check input {
   color: var(--muted);
 }
 
+.also-in {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--orange-dark);
+}
+
+.other-cats {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: #fff8f5;
+  border: 1px solid var(--border);
+}
+
+.other-cats-title {
+  display: block;
+  font-size: 14px;
+}
+
+.other-cats-help,
+.other-cats-empty {
+  margin: 6px 0 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.other-cats-list {
+  display: grid;
+  gap: 8px;
+}
+
+.other-cat {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.other-cat:hover {
+  border-color: var(--red);
+}
+
+.other-cat .role-badge {
+  margin-top: 0;
+}
+
+.other-cat-majors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.other-cats .btn {
+  margin-top: 10px;
+}
+
 .edit-info {
   font-size: 13px;
   color: var(--muted);
