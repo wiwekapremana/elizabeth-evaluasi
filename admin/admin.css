@@ -60,10 +60,55 @@
   border-bottom-color: var(--red);
 }
 
+/* Tab kategori */
+.role-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.role-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  transition: .15s ease;
+}
+
+.role-tab:hover {
+  border-color: var(--red);
+}
+
+.role-tab.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+.role-count {
+  font-size: 12px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--red-soft);
+  color: var(--red-dark);
+}
+
+.role-tab.active .role-count {
+  background: rgba(255, 255, 255, .22);
+  color: #fff;
+}
+
 /* Toolbar */
 .toolbar {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)) auto;
+  grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)) auto;
   gap: 10px;
   align-items: center;
   margin-bottom: 18px;
@@ -487,7 +532,7 @@ label.check input {
 
 @media (max-width: 900px) {
   .toolbar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .toolbar input[type="search"],

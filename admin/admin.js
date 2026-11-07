@@ -22,6 +22,7 @@ const state = {
   majors: typeof MAJORS !== "undefined" ? MAJORS.slice() : [],
   instructors: [],
   tab: "list",
+  role: ROLE_ORDER[0], // kategori yang sedang dibuka; "" = semua
   page: 1,
   draft: {},      // id -> majors[] (perubahan matriks yang belum disimpan)
   editing: null   // instruktur yang sedang diedit; null = tambah baru
@@ -217,20 +218,34 @@ function populateFilters() {
     state.majors.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
   majorSelect.value = keepMajor;
 
-  const roleSelect = $("filterRole");
-  const keepRole = roleSelect.value;
   const roles = rolesInUse();
-  roleSelect.innerHTML = '<option value="">Semua kategori</option>' +
-    roles.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join("");
-  roleSelect.value = keepRole;
-
+  if (state.role && !roles.includes(state.role)) state.role = ROLE_ORDER[0];
   $("roleOptions").innerHTML = roles.map(r => `<option value="${escapeHtml(r)}"></option>`).join("");
+}
+
+function roleLabel(role) {
+  return role.replace(/^Instruktur\s+/i, "") || role;
+}
+
+function renderRoleTabs() {
+  const tabs = [...rolesInUse(), ""];
+  $("roleTabs").innerHTML = tabs.map(role => {
+    const count = role
+      ? state.instructors.filter(i => i.role === role).length
+      : state.instructors.length;
+    const label = role ? roleLabel(role) : "Semua";
+    const active = state.role === role;
+    return `
+      <button type="button" class="role-tab ${active ? "active" : ""}" role="tab" aria-selected="${active}" data-role="${escapeHtml(role)}">
+        ${escapeHtml(label)} <span class="role-count">${count}</span>
+      </button>`;
+  }).join("");
 }
 
 function filteredInstructors() {
   const query = $("searchInput").value.trim().toLowerCase();
   const major = $("filterMajor").value;
-  const role = $("filterRole").value;
+  const role = state.role;
   const status = $("filterStatus").value;
 
   return sortInstructors(state.instructors.filter(item => {
@@ -251,6 +266,7 @@ function render() {
     `${state.instructors.length} instruktur · ${active} aktif · ${state.instructors.length - active} nonaktif` +
     (DEMO ? " · MODE DEMO" : "");
 
+  renderRoleTabs();
   $("listTab").classList.toggle("hidden", state.tab !== "list");
   $("matrixTab").classList.toggle("hidden", state.tab !== "matrix");
   document.querySelectorAll(".tab").forEach(tab => {
@@ -464,7 +480,7 @@ function driveThumb(url) {
 function openEdit(item = null) {
   state.editing = item;
   const filterMajor = $("filterMajor").value;
-  const filterRole = $("filterRole").value;
+  const filterRole = state.role;
 
   $("editTitle").textContent = item ? "Edit Instruktur" : "Tambah Instruktur";
   $("fName").value = item?.name || "";
@@ -586,7 +602,15 @@ $("reloadBtn").addEventListener("click", () => {
 });
 $("addBtn").addEventListener("click", () => openEdit(null));
 
-["searchInput", "filterMajor", "filterRole", "filterStatus"].forEach(id => {
+$("roleTabs").addEventListener("click", (event) => {
+  const tab = event.target.closest(".role-tab");
+  if (!tab) return;
+  state.role = tab.dataset.role;
+  state.page = 1;
+  render();
+});
+
+["searchInput", "filterMajor", "filterStatus"].forEach(id => {
   $(id).addEventListener(id === "searchInput" ? "input" : "change", () => {
     state.page = 1;
     render();
